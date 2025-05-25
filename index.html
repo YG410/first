@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>私の最初のウェブサイト</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 私のウェブサイト</h1>
+        <p>GitHubで作った最初のウェブサイトです！</p>
+        
+        <button onclick="sayHello()">クリックしてみて！</button>
+        <button onclick="changeColor()">色を変える</button>
+        
+        <div id="message" style="margin-top: 20px; font-size: 18px;"></div>
+    </div>
+
+    <script>
+        function sayHello() {
+            document.getElementById('message').innerHTML = 
+                '🎉 こんにちは！ボタンが動きました！';
+        }
+        
+        function changeColor() {
+            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.querySelector('.container').style.backgroundColor = randomColor;
+            
+            document.getElementById('message').innerHTML = 
+                '🌈 色が変わりました！';
+        }
+    </script>
+</body>
+</html>
