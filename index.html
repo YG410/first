@@ -3,151 +3,568 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>シンプル割り勘計算機</title>
+    <title>Split Calculator - 洗練された割り勘計算</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
         
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
         
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 5px;
+        :root {
+            --primary-beige: #f7f3e9;
+            --secondary-beige: #f0e6d2;
+            --tertiary-beige: #e8dcc0;
+            --deep-beige: #d4c4a8;
+            --warm-brown: #8b7355;
+            --rich-brown: #6b5b47;
+            --accent-gold: #d4af37;
+            --accent-gold-light: #f4e4a6;
+            --accent-gold-deep: #b8941f;
+            --text-primary: #3c3530;
+            --text-secondary: #6b5b47;
+            --text-muted: #8b7355;
+            --surface-cream: rgba(247, 243, 233, 0.8);
+            --surface-cream-hover: rgba(240, 230, 210, 0.9);
+            --border-cream: rgba(212, 196, 168, 0.4);
+            --border-gold: rgba(212, 175, 55, 0.4);
+            --shadow-warm: rgba(139, 115, 85, 0.15);
+            --shadow-medium: rgba(107, 91, 71, 0.2);
+            --shadow-strong: rgba(60, 53, 48, 0.25);
+            --gradient-primary: linear-gradient(135deg, #d4af37 0%, #f4e4a6 50%, #e8dcc0 100%);
+            --gradient-gold: linear-gradient(135deg, #d4af37 0%, #f4e4a6 100%);
+            --gradient-surface: linear-gradient(135deg, rgba(247,243,233,0.6) 0%, rgba(240,230,210,0.8) 100%);
+            --gradient-background: linear-gradient(135deg, #f7f3e9 0%, #f0e6d2 50%, #e8dcc0 100%);
         }
         
-        button:hover {
-            background-color: #0056b3;
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gradient-background);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(247, 228, 206, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(212, 196, 168, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: var(--gradient-gold);
+            border-radius: 2px;
+        }
+        
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .card {
+            background: var(--gradient-surface);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--border-cream);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px var(--shadow-warm);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-gold);
+            opacity: 0.6;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .card:hover {
+            background: var(--surface-cream-hover);
+            transform: translateY(-2px);
+            border-color: var(--border-gold);
+            box-shadow: 0 16px 48px var(--shadow-medium);
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-field {
+            position: relative;
+        }
+        
+        .form-field label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .form-field input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--primary-beige);
+            border: 2px solid var(--border-cream);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 2px 4px var(--shadow-warm);
+        }
+        
+        .form-field input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background: var(--secondary-beige);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15), inset 0 2px 4px var(--shadow-warm);
+            transform: translateY(-1px);
+        }
+        
+        .form-field input::placeholder {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            background: var(--gradient-gold);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 6px 20px var(--shadow-warm);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px var(--shadow-medium);
+            filter: brightness(1.05);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: var(--surface-cream);
+            color: var(--text-primary);
+            border: 2px solid var(--border-cream);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--surface-cream-hover);
+            border-color: var(--border-gold);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            color: var(--primary-beige);
+        }
+        
+        .btn-calculate {
+            background: var(--gradient-primary);
+            padding: 1.25rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 16px;
         }
         
         .payment-item {
-            background-color: #f8f9fa;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #dee2e6;
+            background: var(--primary-beige);
+            border: 2px solid var(--border-cream);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px var(--shadow-warm);
+        }
+        
+        .payment-item:hover {
+            background: var(--secondary-beige);
+            border-color: var(--border-gold);
+            transform: translateX(4px);
+            box-shadow: 0 8px 24px var(--shadow-medium);
+        }
+        
+        .payment-info {
+            flex: 1;
+        }
+        
+        .payment-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .payment-name {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+        
+        .payment-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+        
+        .payment-amount {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--accent-gold-deep);
         }
         
         .delete-btn {
-            background-color: #dc3545;
-            padding: 5px 10px;
-            font-size: 14px;
+            padding: 0.5rem;
+            background: rgba(217, 119, 6, 0.1);
+            color: #d97706;
+            border: 2px solid rgba(217, 119, 6, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: bold;
         }
         
         .delete-btn:hover {
-            background-color: #c82333;
+            background: rgba(217, 119, 6, 0.2);
+            border-color: #d97706;
+            transform: scale(1.05);
         }
         
-        .result {
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            padding: 20px;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        
-        .settlement {
-            background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-        }
-        
-        .empty {
+        .empty-state {
             text-align: center;
-            color: #666;
+            color: var(--text-muted);
             font-style: italic;
-            padding: 20px;
+            padding: 2rem;
+            border: 2px dashed var(--border-cream);
+            border-radius: 12px;
+            background: var(--primary-beige);
+        }
+        
+        .result-card {
+            background: var(--gradient-surface);
+            border: 2px solid var(--border-gold);
+            position: relative;
+        }
+        
+        .result-card::before {
+            background: var(--gradient-gold);
+            height: 3px;
+        }
+        
+        .total-display {
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid var(--border-gold);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .total-amount {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: var(--accent-gold-deep);
+            margin-bottom: 0.5rem;
+        }
+        
+        .total-breakdown {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .settlement-item {
+            background: var(--primary-beige);
+            border: 2px solid var(--border-cream);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px var(--shadow-warm);
+        }
+        
+        .settlement-item:hover {
+            background: var(--secondary-beige);
+            border-color: var(--border-gold);
+            box-shadow: 0 8px 24px var(--shadow-medium);
+        }
+        
+        .settlement-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .settlement-amount {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-gold-deep);
+        }
+        
+        .perfect-balance {
+            text-align: center;
+            padding: 2rem;
+            color: var(--accent-gold-deep);
+            font-size: 1.2rem;
+            font-weight: 600;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 16px;
+            border: 2px solid var(--border-gold);
+        }
+        
+        .calculation-center {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .floating-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--gradient-gold);
+            color: var(--text-primary);
+            border: none;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 24px var(--shadow-warm);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .floating-top:hover {
+            transform: scale(1.1) translateY(-2px);
+            box-shadow: 0 12px 32px var(--shadow-medium);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .floating-top {
+                display: flex;
+            }
+            
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🧮 シンプル割り勘計算機</h1>
-        
-        <!-- 入力フォーム -->
-        <div class="form-group">
-            <label for="payerName">支払った人:</label>
-            <input type="text" id="payerName" placeholder="例: 田中">
+        <div class="header">
+            <h1>Split Calculator</h1>
+            <p class="subtitle">洗練された割り勘計算で、スマートな精算体験を</p>
         </div>
-        
-        <div class="form-group">
-            <label for="description">内容:</label>
-            <input type="text" id="description" placeholder="例: ランチ代">
+
+        <!-- 入力セクション -->
+        <div class="card fade-in">
+            <h2 class="section-title">Payment Entry</h2>
+            
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="payerName">Name</label>
+                    <input type="text" id="payerName" placeholder="支払った方のお名前" maxlength="20">
+                </div>
+                <div class="form-field">
+                    <label for="description">Description</label>
+                    <input type="text" id="description" placeholder="お支払いの内容" maxlength="30">
+                </div>
+                <div class="form-field">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" placeholder="0" min="1" max="9999999">
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button class="btn" onclick="addPayment()">Add Payment</button>
+                <button class="btn btn-danger" onclick="clearAll()" style="display: none;" id="clearAllBtn">Clear All</button>
+            </div>
         </div>
-        
-        <div class="form-group">
-            <label for="amount">金額:</label>
-            <input type="number" id="amount" placeholder="例: 3000">
+
+        <!-- 支払い一覧セクション -->
+        <div class="card fade-in">
+            <h2 class="section-title">Payment List</h2>
+            <div id="paymentsList">
+                <div class="empty-state">
+                    まだお支払い記録がございません<br>
+                    上記フォームより記録を開始してください
+                </div>
+            </div>
         </div>
-        
-        <button onclick="addPayment()">支払いを追加</button>
-        <button onclick="clearAll()">全て削除</button>
-        
-        <!-- 支払い一覧 -->
-        <h2>📝 支払い記録</h2>
-        <div id="paymentsList">
-            <div class="empty">まだ支払い記録がありません</div>
-        </div>
-        
+
         <!-- 計算ボタン -->
-        <div id="calculateSection" style="display: none;">
-            <button onclick="calculateSettlement()" style="background-color: #28a745; font-size: 18px; padding: 15px 30px;">
-                💰 精算を計算する
+        <div class="calculation-center" id="calculateSection" style="display: none;">
+            <button class="btn btn-calculate" onclick="calculateSettlement()">
+                Calculate Settlement
             </button>
         </div>
-        
-        <!-- 結果表示 -->
-        <div id="resultSection" style="display: none;">
-            <h2>💎 精算結果</h2>
-            <div id="totalInfo" class="result"></div>
-            <div id="settlementList"></div>
+
+        <!-- 結果表示セクション -->
+        <div id="resultSection" class="card result-card fade-in" style="display: none;">
+            <h2 class="section-title">Settlement Results</h2>
+            
+            <div id="totalInfo" class="total-display">
+                <!-- 総額と一人当たりの金額 -->
+            </div>
+            
+            <div id="settlementList">
+                <!-- 精算の詳細 -->
+            </div>
+            
+            <div class="actions">
+                <button class="btn" onclick="shareResult()">Share Results</button>
+                <button class="btn btn-secondary" onclick="resetCalculation()">New Calculation</button>
+            </div>
         </div>
     </div>
+
+    <button class="floating-top" onclick="scrollToTop()" id="floatingBtn">
+        ↑
+    </button>
 
     <script>
         // グローバル変数
@@ -166,12 +583,12 @@
 
             // 入力チェック
             if (!payerName) {
-                alert('支払った人の名前を入力してください');
+                alert('支払った方のお名前を入力してください');
                 return;
             }
             
             if (!description) {
-                alert('内容を入力してください');
+                alert('お支払いの内容を入力してください');
                 return;
             }
             
@@ -203,7 +620,7 @@
             // 画面を更新
             updateDisplay();
             
-            alert('支払いを追加しました！');
+            alert('お支払いを記録いたしました');
         }
 
         // 支払いを削除する関数
@@ -219,16 +636,16 @@
             console.log('削除後の支払い一覧:', payments);
             
             updateDisplay();
-            alert('支払いを削除しました');
+            alert('記録を削除いたしました');
         }
 
         // 全ての記録を削除
         function clearAll() {
-            if (confirm('全ての記録を削除しますか？')) {
+            if (confirm('すべての記録を削除いたしますか？')) {
                 payments = [];
                 members.clear();
                 updateDisplay();
-                alert('全ての記録を削除しました');
+                alert('すべての記録を削除いたしました');
             }
         }
 
@@ -239,24 +656,32 @@
             const paymentsList = document.getElementById('paymentsList');
             const calculateSection = document.getElementById('calculateSection');
             const resultSection = document.getElementById('resultSection');
+            const clearAllBtn = document.getElementById('clearAllBtn');
             
             // 支払い一覧を更新
             if (payments.length === 0) {
-                paymentsList.innerHTML = '<div class="empty">まだ支払い記録がありません</div>';
+                paymentsList.innerHTML = '<div class="empty-state">まだお支払い記録がございません<br>上記フォームより記録を開始してください</div>';
                 calculateSection.style.display = 'none';
                 resultSection.style.display = 'none';
+                clearAllBtn.style.display = 'none';
             } else {
                 paymentsList.innerHTML = payments.map(payment => `
                     <div class="payment-item">
-                        <div>
-                            <strong>${payment.payer}</strong> - ${payment.description}: 
-                            <strong>¥${payment.amount.toLocaleString()}</strong>
+                        <div class="payment-info">
+                            <div class="payment-header">
+                                <span class="payment-name">${payment.payer}</span>
+                                <span class="payment-description">${payment.description}</span>
+                            </div>
+                            <div class="payment-amount">¥${payment.amount.toLocaleString()}</div>
                         </div>
-                        <button class="delete-btn" onclick="removePayment(${payment.id})">削除</button>
+                        <button class="delete-btn" onclick="removePayment(${payment.id})" title="削除">
+                            ×
+                        </button>
                     </div>
                 `).join('');
                 
                 calculateSection.style.display = 'block';
+                clearAllBtn.style.display = 'inline-flex';
             }
         }
 
@@ -265,12 +690,12 @@
             console.log('精算計算開始');
             
             if (payments.length === 0) {
-                alert('支払い記録がありません');
+                alert('お支払い記録がありません');
                 return;
             }
 
             if (members.size < 2) {
-                alert('2人以上のメンバーが必要です');
+                alert('2名以上のメンバーが必要です');
                 return;
             }
 
@@ -335,28 +760,69 @@
 
             // 総額情報
             totalInfo.innerHTML = `
-                <h3>💰 合計金額: ¥${totalAmount.toLocaleString()}</h3>
-                <p>${memberCount}人 × ¥${perPerson.toLocaleString()}${remainder > 0 ? ` (+¥${remainder})` : ''}</p>
-                <p><strong>参加者:</strong> ${Array.from(members).join(', ')}</p>
+                <div class="total-amount">¥${totalAmount.toLocaleString()}</div>
+                <div class="total-breakdown">${memberCount}名 × ¥${perPerson.toLocaleString()}${remainder > 0 ? ` (+¥${remainder})` : ''}</div>
             `;
 
             // 精算リスト
             if (settlements.length === 0) {
-                settlementList.innerHTML = '<div class="result"><h3>✅ 精算不要！</h3><p>全員が同額を支払いました</p></div>';
+                settlementList.innerHTML = '<div class="perfect-balance">Perfect Balance<br>精算の必要がございません</div>';
             } else {
-                settlementList.innerHTML = '<h3>💸 精算内容:</h3>' + 
-                    settlements.map(settlement => 
-                        `<div class="settlement">
-                            <strong>${settlement.from}</strong> → <strong>${settlement.to}</strong>: 
-                            <strong>¥${settlement.amount.toLocaleString()}</strong>
-                        </div>`
-                    ).join('');
+                settlementList.innerHTML = settlements.map(settlement => 
+                    `<div class="settlement-item">
+                        <div class="settlement-text">
+                            <strong>${settlement.from}</strong> → <strong>${settlement.to}</strong>
+                        </div>
+                        <div class="settlement-amount">¥${settlement.amount.toLocaleString()}</div>
+                    </div>`
+                ).join('');
             }
 
             resultSection.style.display = 'block';
             resultSection.scrollIntoView({ behavior: 'smooth' });
             
-            alert('精算計算が完了しました！');
+            alert('精算計算が完了いたしました');
+        }
+
+        // 結果をシェア
+        function shareResult() {
+            if (payments.length === 0) return;
+
+            const totalAmount = payments.reduce((sum, p) => sum + p.amount, 0);
+            const memberArray = Array.from(members);
+            const perPerson = Math.floor(totalAmount / memberArray.length);
+            
+            let shareText = `Split Calculator 精算結果\n\n`;
+            shareText += `総額: ¥${totalAmount.toLocaleString()}\n`;
+            shareText += `${memberArray.length}名 × ¥${perPerson.toLocaleString()}\n\n`;
+            shareText += `支払い記録:\n`;
+            payments.forEach(p => {
+                shareText += `• ${p.payer}: ${p.description} ¥${p.amount.toLocaleString()}\n`;
+            });
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Split Calculator 精算結果',
+                    text: shareText
+                });
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('結果をクリップボードにコピーいたしました');
+                }).catch(() => {
+                    alert('コピーに失敗いたしました');
+                });
+            }
+        }
+
+        // 新しい計算を開始
+        function resetCalculation() {
+            clearAll();
+            scrollToTop();
+        }
+
+        // トップにスクロール
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Enterキーで追加
@@ -366,8 +832,18 @@
             }
         });
 
+        // スクロール時のフローティングボタン表示制御
+        window.addEventListener('scroll', function() {
+            const floatingBtn = document.getElementById('floatingBtn');
+            if (window.scrollY > 300) {
+                floatingBtn.style.display = 'flex';
+            } else {
+                floatingBtn.style.display = 'none';
+            }
+        });
+
         // 初期化確認
-        console.log('スクリプト読み込み完了');
+        console.log('Split Calculator 初期化完了');
     </script>
 </body>
 </html>
