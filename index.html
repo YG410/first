@@ -3,865 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opulent Split - 究極の割り勘計算</title>
+    <title>シンプル割り勘計算機</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        :root {
-            --primary-beige: #f7f3e9;
-            --secondary-beige: #f0e6d2;
-            --tertiary-beige: #e8dcc0;
-            --deep-beige: #d4c4a8;
-            --warm-brown: #8b7355;
-            --rich-brown: #6b5b47;
-            --accent-gold: #d4af37;
-            --accent-gold-light: #f4e4a6;
-            --accent-gold-deep: #b8941f;
-            --accent-champagne: #f7e7ce;
-            --text-primary: #3c3530;
-            --text-secondary: #6b5b47;
-            --text-muted: #8b7355;
-            --text-accent: #5a4a3a;
-            --surface-cream: rgba(247, 243, 233, 0.8);
-            --surface-cream-hover: rgba(240, 230, 210, 0.9);
-            --border-cream: rgba(212, 196, 168, 0.4);
-            --border-gold: rgba(212, 175, 55, 0.4);
-            --shadow-warm: rgba(139, 115, 85, 0.15);
-            --shadow-medium: rgba(107, 91, 71, 0.2);
-            --shadow-strong: rgba(60, 53, 48, 0.25);
-            --gradient-primary: linear-gradient(135deg, #d4af37 0%, #f4e4a6 50%, #e8dcc0 100%);
-            --gradient-gold: linear-gradient(135deg, #d4af37 0%, #f4e4a6 100%);
-            --gradient-surface: linear-gradient(135deg, rgba(247,243,233,0.6) 0%, rgba(240,230,210,0.8) 100%);
-            --gradient-background: linear-gradient(135deg, #f7f3e9 0%, #f0e6d2 50%, #e8dcc0 100%);
-        }
-        
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--gradient-background);
-            color: var(--text-primary);
-            min-height: 100vh;
-            padding: 2rem 1rem;
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(247, 228, 206, 0.12) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(212, 196, 168, 0.06) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
         }
         
         .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            position: relative;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
-        .header {
+        h1 {
             text-align: center;
-            margin-bottom: 4rem;
-            position: relative;
+            color: #333;
+            margin-bottom: 30px;
         }
         
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 2px;
-            background: var(--gradient-gold);
-            border-radius: 2px;
+        .form-group {
+            margin-bottom: 15px;
         }
         
-        .header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 6vw, 4.5rem);
-            font-weight: 700;
-            background: var(--gradient-gold);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            letter-spacing: -0.03em;
-            line-height: 1.1;
-        }
-        
-        .header .subtitle {
-            color: var(--text-secondary);
-            font-size: 1.25rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-        
-        .header .tagline {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            font-style: italic;
-        }
-        
-        .premium-card {
-            background: var(--gradient-surface);
-            backdrop-filter: blur(24px);
-            border: 2px solid var(--border-cream);
-            border-radius: 24px;
-            padding: 3rem;
-            margin-bottom: 2.5rem;
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-            box-shadow: 0 8px 32px var(--shadow-warm);
-        }
-        
-        .premium-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--gradient-gold);
-            opacity: 0.6;
-        }
-        
-        .premium-card:hover {
-            background: var(--surface-cream-hover);
-            transform: translateY(-4px);
-            border-color: var(--border-gold);
-            box-shadow: 0 20px 60px var(--shadow-medium);
-        }
-        
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2.5rem;
-        }
-        
-        .section-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--gradient-primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: var(--text-primary);
-            box-shadow: 0 8px 20px var(--shadow-warm);
-        }
-        
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.75rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin: 0;
-        }
-        
-        .luxury-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2.5rem;
-        }
-        
-        .form-field {
-            position: relative;
-        }
-        
-        .form-field label {
+        label {
             display: block;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-accent);
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
         
-        .form-field input {
+        input {
             width: 100%;
-            padding: 1.25rem 1.5rem;
-            background: var(--primary-beige);
-            border: 2px solid var(--border-cream);
-            border-radius: 16px;
-            color: var(--text-primary);
-            font-size: 1.1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 2px 4px var(--shadow-warm);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
         }
         
-        .form-field input:focus {
-            outline: none;
-            border-color: var(--accent-gold);
-            background: var(--secondary-beige);
-            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15), inset 0 2px 4px var(--shadow-warm);
-            transform: translateY(-1px);
-        }
-        
-        .form-field input::placeholder {
-            color: var(--text-muted);
-            font-style: italic;
-        }
-        
-        .btn-luxury {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.25rem 2.5rem;
-            background: var(--gradient-gold);
-            color: var(--text-primary);
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
             border: none;
-            border-radius: 16px;
-            font-size: 1rem;
-            font-weight: 700;
+            border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-            gap: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 8px 24px var(--shadow-warm);
+            font-size: 16px;
+            margin: 5px;
         }
         
-        .btn-luxury:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 16px 40px var(--shadow-medium);
-            filter: brightness(1.05);
-            background: linear-gradient(135deg, var(--accent-gold-deep) 0%, var(--accent-gold) 100%);
+        button:hover {
+            background-color: #0056b3;
         }
         
-        .btn-luxury:active {
-            transform: translateY(-1px);
-        }
-        
-        .btn-secondary {
-            background: var(--surface-cream);
-            color: var(--text-primary);
-            border: 2px solid var(--border-cream);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--surface-cream-hover);
-            border-color: var(--border-gold);
-            box-shadow: 0 12px 32px var(--shadow-warm);
-        }
-        
-        .btn-danger {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-            color: var(--primary-beige);
-        }
-        
-        .btn-danger:hover {
-            box-shadow: 0 16px 40px rgba(217, 119, 6, 0.3);
-        }
-        
-        .btn-calculate {
-            background: var(--gradient-primary);
-            color: var(--text-primary);
-            padding: 1.75rem 3rem;
-            font-size: 1.25rem;
-            font-weight: 800;
-            border-radius: 20px;
-            box-shadow: 0 12px 36px var(--shadow-medium);
-        }
-        
-        .btn-calculate:hover {
-            box-shadow: 0 20px 50px var(--shadow-strong);
-            transform: translateY(-4px);
-        }
-        
-        .payment-entry {
-            background: var(--primary-beige);
-            border: 2px solid var(--border-cream);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
+        .payment-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s ease;
-            position: relative;
-            box-shadow: 0 4px 16px var(--shadow-warm);
         }
         
-        .payment-entry::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .delete-btn {
+            background-color: #dc3545;
+            padding: 5px 10px;
+            font-size: 14px;
         }
         
-        .payment-entry:hover {
-            background: var(--secondary-beige);
-            border-color: var(--border-gold);
-            transform: translateX(4px);
-            box-shadow: 0 8px 24px var(--shadow-medium);
+        .delete-btn:hover {
+            background-color: #c82333;
         }
         
-        .payment-entry:hover::before {
-            opacity: 1;
+        .result {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
         }
         
-        .payment-details {
-            flex: 1;
+        .settlement {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
         }
         
-        .payment-meta {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 0.75rem;
-        }
-        
-        .payment-name {
-            font-weight: 700;
-            color: var(--text-primary);
-            font-size: 1.1rem;
-        }
-        
-        .payment-category {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+        .empty {
+            text-align: center;
+            color: #666;
             font-style: italic;
-        }
-        
-        .payment-value {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--accent-gold-deep);
-        }
-        
-        .delete-action {
-            padding: 0.75rem;
-            background: rgba(217, 119, 6, 0.1);
-            color: #d97706;
-            border: 2px solid rgba(217, 119, 6, 0.2);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-        }
-        
-        .delete-action:hover {
-            background: rgba(217, 119, 6, 0.2);
-            border-color: #d97706;
-            transform: scale(1.05);
-        }
-        
-        .members-showcase {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .member-pill {
-            background: var(--gradient-primary);
-            color: var(--text-primary);
-            padding: 0.875rem 1.5rem;
-            border-radius: 25px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            box-shadow: 0 4px 16px var(--shadow-warm);
-            transition: all 0.3s ease;
-            border: 2px solid var(--border-gold);
-        }
-        
-        .member-pill:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px var(--shadow-medium);
-        }
-        
-        .empty-elegant {
-            text-align: center;
-            color: var(--text-muted);
-            font-style: italic;
-            padding: 3rem 2rem;
-            border: 2px dashed var(--border-cream);
-            border-radius: 20px;
-            background: var(--primary-beige);
-            position: relative;
-        }
-        
-        .empty-elegant::before {
-            content: '✨';
-            display: block;
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-        
-        .results-showcase {
-            background: var(--gradient-surface);
-            border: 2px solid var(--border-gold);
-            position: relative;
-        }
-        
-        .results-showcase::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gradient-gold);
-        }
-        
-        .total-display {
-            background: rgba(212, 175, 55, 0.1);
-            border: 2px solid var(--border-gold);
-            border-radius: 20px;
-            padding: 3rem;
-            text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-        
-        .total-display::before {
-            content: '💎';
-            position: absolute;
-            top: -1.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary-beige);
-            padding: 0.75rem;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            border: 2px solid var(--border-gold);
-        }
-        
-        .total-amount {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 700;
-            color: var(--accent-gold-deep);
-            margin-bottom: 1rem;
-            line-height: 1;
-        }
-        
-        .total-breakdown {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-        
-        .settlement-entry {
-            background: var(--primary-beige);
-            border: 2px solid var(--border-cream);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 16px var(--shadow-warm);
-        }
-        
-        .settlement-entry:hover {
-            background: var(--secondary-beige);
-            border-color: var(--border-gold);
-            box-shadow: 0 8px 24px var(--shadow-medium);
-        }
-        
-        .settlement-flow {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        
-        .settlement-sum {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent-gold-deep);
-        }
-        
-        .perfect-balance {
-            text-align: center;
-            padding: 3rem;
-            color: var(--accent-gold-deep);
-            font-size: 1.3rem;
-            font-weight: 600;
-            background: rgba(212, 175, 55, 0.1);
-            border-radius: 20px;
-            border: 2px solid var(--border-gold);
-        }
-        
-        .perfect-balance::before {
-            content: '✨';
-            display: block;
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-        
-        .calculation-center {
-            text-align: center;
-            margin: 4rem 0;
-        }
-        
-        .action-suite {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 3rem;
-        }
-        
-        .floating-return {
-            position: fixed;
-            bottom: 2.5rem;
-            right: 2.5rem;
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: var(--gradient-gold);
-            color: var(--text-primary);
-            border: none;
-            font-size: 1.5rem;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 12px 32px var(--shadow-warm);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .floating-return:hover {
-            transform: scale(1.1) translateY(-2px);
-            box-shadow: 0 16px 40px var(--shadow-medium);
-        }
-        
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem 0.5rem;
-            }
-            
-            .premium-card {
-                padding: 2rem;
-                margin-bottom: 2rem;
-            }
-            
-            .luxury-form {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            
-            .total-amount {
-                font-size: 3rem;
-            }
-            
-            .floating-return {
-                display: flex;
-            }
-            
-            .action-suite {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn-luxury {
-                width: 100%;
-                max-width: 300px;
-            }
-        }
-        
-        .fade-luxury {
-            animation: fadeInLuxury 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        @keyframes fadeInLuxury {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        .slide-elegant {
-            animation: slideInElegant 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        @keyframes slideInElegant {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        .pulse-gold {
-            animation: pulseGold 2s infinite;
-        }
-        
-        @keyframes pulseGold {
-            0%, 100% {
-                box-shadow: 0 12px 36px var(--shadow-medium);
-            }
-            50% {
-                box-shadow: 0 20px 50px var(--shadow-strong);
-            }
+            padding: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Opulent Split</h1>
-            <p class="subtitle">究極の割り勘計算体験</p>
-            <p class="tagline">— 洗練されたアルゴリズムで、完璧な精算を —</p>
+        <h1>🧮 シンプル割り勘計算機</h1>
+        
+        <!-- 入力フォーム -->
+        <div class="form-group">
+            <label for="payerName">支払った人:</label>
+            <input type="text" id="payerName" placeholder="例: 田中">
         </div>
-
-        <!-- 支払い記録セクション -->
-        <div class="premium-card fade-luxury">
-            <div class="section-header">
-                <div class="section-icon">📋</div>
-                <h2 class="section-title">Payment Registry</h2>
-            </div>
-            
-            <div class="luxury-form">
-                <div class="form-field">
-                    <label for="payerName">PAYER NAME</label>
-                    <input type="text" id="payerName" placeholder="支払った方のお名前" maxlength="20">
-                </div>
-                <div class="form-field">
-                    <label for="description">DESCRIPTION</label>
-                    <input type="text" id="description" placeholder="お支払いの内容" maxlength="30">
-                </div>
-                <div class="form-field">
-                    <label for="amount">AMOUNT</label>
-                    <input type="number" id="amount" placeholder="0" min="1" max="9999999">
-                </div>
-            </div>
-            
-            <button class="btn-luxury" onclick="addPayment()">
-                <span>✨</span>
-                Add Payment
-            </button>
-            
-            <div id="paymentsList" style="margin-top: 3rem;">
-                <div class="empty-elegant">
-                    まだお支払い記録がございません<br>
-                    上記フォームより記録を開始してください
-                </div>
-            </div>
-            
-            <div class="action-suite" style="margin-top: 2rem;">
-                <button class="btn-luxury btn-danger" onclick="clearAll()" style="display: none;" id="clearAllBtn">
-                    <span>🗑️</span>
-                    Clear All
-                </button>
-            </div>
+        
+        <div class="form-group">
+            <label for="description">内容:</label>
+            <input type="text" id="description" placeholder="例: ランチ代">
         </div>
-
-        <!-- メンバー確認セクション -->
-        <div class="premium-card fade-luxury" id="membersSection" style="display: none;">
-            <div class="section-header">
-                <div class="section-icon">👥</div>
-                <h2 class="section-title">Members</h2>
-            </div>
-            <div id="membersList">
-                <div class="empty-elegant">
-                    お支払い記録を追加すると自動で表示されます
-                </div>
-            </div>
+        
+        <div class="form-group">
+            <label for="amount">金額:</label>
+            <input type="number" id="amount" placeholder="例: 3000">
         </div>
-
+        
+        <button onclick="addPayment()">支払いを追加</button>
+        <button onclick="clearAll()">全て削除</button>
+        
+        <!-- 支払い一覧 -->
+        <h2>📝 支払い記録</h2>
+        <div id="paymentsList">
+            <div class="empty">まだ支払い記録がありません</div>
+        </div>
+        
         <!-- 計算ボタン -->
-        <div class="calculation-center" id="calculateSection" style="display: none;">
-            <button class="btn-luxury btn-calculate pulse-gold" onclick="calculateSettlement()">
-                <span>⚡</span>
-                Calculate Settlement
+        <div id="calculateSection" style="display: none;">
+            <button onclick="calculateSettlement()" style="background-color: #28a745; font-size: 18px; padding: 15px 30px;">
+                💰 精算を計算する
             </button>
         </div>
-
-        <!-- 結果表示セクション -->
-        <div id="resultSection" class="premium-card results-showcase fade-luxury" style="display: none;">
-            <div class="section-header">
-                <div class="section-icon">💎</div>
-                <h2 class="section-title">Settlement Results</h2>
-            </div>
-            
-            <div id="totalInfo" class="total-display">
-                <!-- 総額と一人当たりの金額 -->
-            </div>
-            
-            <div id="settlementList">
-                <!-- 精算の詳細 -->
-            </div>
-            
-            <div class="action-suite">
-                <button class="btn-luxury" onclick="shareResult()">
-                    <span>📱</span>
-                    Share Results
-                </button>
-                <button class="btn-luxury btn-secondary" onclick="resetCalculation()">
-                    <span>🔄</span>
-                    New Calculation
-                </button>
-            </div>
+        
+        <!-- 結果表示 -->
+        <div id="resultSection" style="display: none;">
+            <h2>💎 精算結果</h2>
+            <div id="totalInfo" class="result"></div>
+            <div id="settlementList"></div>
         </div>
     </div>
 
-    <button class="floating-return" onclick="scrollToTop()" id="floatingBtn">
-        ↑
-    </button>
-
     <script>
+        // グローバル変数
         let payments = [];
         let members = new Set();
 
+        // 支払いを追加する関数
         function addPayment() {
+            console.log('addPayment関数が呼ばれました');
+            
             const payerName = document.getElementById('payerName').value.trim();
             const description = document.getElementById('description').value.trim();
             const amount = parseInt(document.getElementById('amount').value);
 
-            if (!payerName || !description || !amount || amount <= 0) {
-                showElegantNotification('すべての項目を正しくご入力ください', 'warning');
+            console.log('入力値:', { payerName, description, amount });
+
+            // 入力チェック
+            if (!payerName) {
+                alert('支払った人の名前を入力してください');
+                return;
+            }
+            
+            if (!description) {
+                alert('内容を入力してください');
+                return;
+            }
+            
+            if (!amount || amount <= 0 || isNaN(amount)) {
+                alert('正しい金額を入力してください');
                 return;
             }
 
+            // 支払い記録を作成
             const payment = {
                 id: Date.now(),
                 payer: payerName,
                 description: description,
-                amount: amount,
-                timestamp: new Date()
+                amount: amount
             };
 
+            // 配列に追加
             payments.push(payment);
             members.add(payerName);
+
+            console.log('支払い追加:', payment);
+            console.log('現在の支払い一覧:', payments);
 
             // フォームをクリア
             document.getElementById('payerName').value = '';
             document.getElementById('description').value = '';
             document.getElementById('amount').value = '';
 
-            updatePaymentsList();
-            updateMembersList();
-            updateUI();
+            // 画面を更新
+            updateDisplay();
             
-            showElegantNotification('お支払いを記録いたしました', 'success');
+            alert('支払いを追加しました！');
         }
 
+        // 支払いを削除する関数
         function removePayment(paymentId) {
+            console.log('削除ID:', paymentId);
+            
             payments = payments.filter(p => p.id !== paymentId);
             
             // メンバーリストを再構築
             members.clear();
             payments.forEach(p => members.add(p.payer));
             
-            updatePaymentsList();
-            updateMembersList();
-            updateUI();
+            console.log('削除後の支払い一覧:', payments);
             
-            showElegantNotification('記録を削除いたしました', 'info');
+            updateDisplay();
+            alert('支払いを削除しました');
         }
 
-        function updatePaymentsList() {
-            const container = document.getElementById('paymentsList');
-            
-            if (payments.length === 0) {
-                container.innerHTML = '<div class="empty-elegant">まだお支払い記録がございません<br>上記フォームより記録を開始してください</div>';
-                return;
+        // 全ての記録を削除
+        function clearAll() {
+            if (confirm('全ての記録を削除しますか？')) {
+                payments = [];
+                members.clear();
+                updateDisplay();
+                alert('全ての記録を削除しました');
             }
-
-            container.innerHTML = payments.map(payment => `
-                <div class="payment-entry slide-elegant">
-                    <div class="payment-details">
-                        <div class="payment-meta">
-                            <span class="payment-name">${payment.payer}</span>
-                            <span class="payment-category">${payment.description}</span>
-                        </div>
-                        <div class="payment-value">¥${payment.amount.toLocaleString()}</div>
-                    </div>
-                    <button class="delete-action" onclick="removePayment(${payment.id})" title="削除">
-                        ×
-                    </button>
-                </div>
-            `).join('');
         }
 
-        function updateMembersList() {
-            const container = document.getElementById('membersList');
-            const section = document.getElementById('membersSection');
+        // 画面表示を更新
+        function updateDisplay() {
+            console.log('updateDisplay関数が呼ばれました');
             
-            if (members.size === 0) {
-                section.style.display = 'none';
-                return;
-            }
-
-            section.style.display = 'block';
-            const memberTags = Array.from(members).map(member => 
-                `<div class="member-pill">${member}</div>`
-            ).join('');
-            
-            container.innerHTML = `<div class="members-showcase">${memberTags}</div>`;
-        }
-
-        function updateUI() {
-            const clearBtn = document.getElementById('clearAllBtn');
+            const paymentsList = document.getElementById('paymentsList');
             const calculateSection = document.getElementById('calculateSection');
             const resultSection = document.getElementById('resultSection');
             
-            if (payments.length > 0) {
-                clearBtn.style.display = 'inline-flex';
-                calculateSection.style.display = 'block';
-            } else {
-                clearBtn.style.display = 'none';
+            // 支払い一覧を更新
+            if (payments.length === 0) {
+                paymentsList.innerHTML = '<div class="empty">まだ支払い記録がありません</div>';
                 calculateSection.style.display = 'none';
                 resultSection.style.display = 'none';
+            } else {
+                paymentsList.innerHTML = payments.map(payment => `
+                    <div class="payment-item">
+                        <div>
+                            <strong>${payment.payer}</strong> - ${payment.description}: 
+                            <strong>¥${payment.amount.toLocaleString()}</strong>
+                        </div>
+                        <button class="delete-btn" onclick="removePayment(${payment.id})">削除</button>
+                    </div>
+                `).join('');
+                
+                calculateSection.style.display = 'block';
             }
         }
 
+        // 精算計算
         function calculateSettlement() {
+            console.log('精算計算開始');
+            
             if (payments.length === 0) {
-                showElegantNotification('お支払い記録を追加してから計算してください', 'warning');
+                alert('支払い記録がありません');
                 return;
             }
 
             if (members.size < 2) {
-                showElegantNotification('2名以上のメンバーが必要です', 'warning');
+                alert('2人以上のメンバーが必要です');
                 return;
             }
 
             const totalAmount = payments.reduce((sum, p) => sum + p.amount, 0);
             const memberArray = Array.from(members);
-            const
+            const perPerson = Math.floor(totalAmount / memberArray.length);
+            const remainder = totalAmount % memberArray.length;
+
+            console.log('計算結果:', { totalAmount, memberArray, perPerson, remainder });
+
+            // 各人の収支計算
+            const balances = {};
+            memberArray.forEach(member => {
+                const paid = payments.filter(p => p.payer === member).reduce((sum, p) => sum + p.amount, 0);
+                balances[member] = paid - perPerson;
+            });
+
+            // 端数処理（最初の人が負担）
+            if (remainder > 0) {
+                const firstMember = memberArray[0];
+                balances[firstMember] -= remainder;
+            }
+
+            console.log('各人の収支:', balances);
+
+            // 精算計算
+            const settlements = [];
+            const creditors = Object.entries(balances).filter(([_, amount]) => amount > 0);
+            const debtors = Object.entries(balances).filter(([_, amount]) => amount < 0);
+
+            creditors.forEach(([creditor, creditAmount]) => {
+                debtors.forEach(([debtor, debtAmount]) => {
+                    if (creditAmount <= 0 || debtAmount >= 0) return;
+
+                    const transferAmount = Math.min(creditAmount, Math.abs(debtAmount));
+                    if (transferAmount > 0) {
+                        settlements.push({
+                            from: debtor,
+                            to: creditor,
+                            amount: transferAmount
+                        });
+
+                        balances[creditor] -= transferAmount;
+                        balances[debtor] += transferAmount;
+                        creditAmount -= transferAmount;
+                        debtAmount += transferAmount;
+                    }
+                });
+            });
+
+            console.log('精算結果:', settlements);
+
+            // 結果表示
+            displayResult(totalAmount, memberArray.length, perPerson, remainder, settlements);
+        }
+
+        // 結果を表示
+        function displayResult(totalAmount, memberCount, perPerson, remainder, settlements) {
+            const resultSection = document.getElementById('resultSection');
+            const totalInfo = document.getElementById('totalInfo');
+            const settlementList = document.getElementById('settlementList');
+
+            // 総額情報
+            totalInfo.innerHTML = `
+                <h3>💰 合計金額: ¥${totalAmount.toLocaleString()}</h3>
+                <p>${memberCount}人 × ¥${perPerson.toLocaleString()}${remainder > 0 ? ` (+¥${remainder})` : ''}</p>
+                <p><strong>参加者:</strong> ${Array.from(members).join(', ')}</p>
+            `;
+
+            // 精算リスト
+            if (settlements.length === 0) {
+                settlementList.innerHTML = '<div class="result"><h3>✅ 精算不要！</h3><p>全員が同額を支払いました</p></div>';
+            } else {
+                settlementList.innerHTML = '<h3>💸 精算内容:</h3>' + 
+                    settlements.map(settlement => 
+                        `<div class="settlement">
+                            <strong>${settlement.from}</strong> → <strong>${settlement.to}</strong>: 
+                            <strong>¥${settlement.amount.toLocaleString()}</strong>
+                        </div>`
+                    ).join('');
+            }
+
+            resultSection.style.display = 'block';
+            resultSection.scrollIntoView({ behavior: 'smooth' });
+            
+            alert('精算計算が完了しました！');
+        }
+
+        // Enterキーで追加
+        document.addEventListener('keypress', function(e) {
+            if (e.target.tagName === 'INPUT' && e.key === 'Enter') {
+                addPayment();
+            }
+        });
+
+        // 初期化確認
+        console.log('スクリプト読み込み完了');
+    </script>
+</body>
+</html>
